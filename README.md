@@ -149,10 +149,10 @@ catalog-diff:
   stage: diff
   environment:
     name: 'diff/${CI_MERGE_REQUEST_IID}'
-    url: '${PUPPETDIFF_URL}/?report=${REPORT}'
+    url: '${PUPPETDIFF_URL}/?report=mr_${CI_MERGE_REQUEST_IID}_${CI_JOB_ID}'
   variables:
     DIFF_FLAGS: --show_resource_diff --exclude_classes --exclude_defined_resources --changed_depth 1000 --old_catalog_from_puppetdb --certless --threads 8 --ignore_parameters alias --exclude_resource_types Stage
-    REPORT: mr_${CI_MERGE_REQUEST_IID}_${CI_JOB_ID}_minimal
+    REPORT: mr_${CI_MERGE_REQUEST_IID}_${CI_JOB_ID}
     PUPPETDIFF_URL: https://puppetdiff.example.com
   rules:
     - if: '$CI_MERGE_REQUEST_ID && $CI_COMMIT_MESSAGE =~ /\[autodiff\]/'
