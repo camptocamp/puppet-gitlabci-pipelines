@@ -92,6 +92,15 @@ r10k-purge:
 ```
 
 
+#### Variables
+
+The rules take two variables:
+
+- `$R10K_BRANCH`: the branch to checkout, useful when checking out a dynamic
+  branch (e.g. from a Merge Request for catalog diff)
+- `$R10K_ENV`: the target branch used to name the environment
+
+
 ### Catalog Diff
 
 The `.catalog-diff` rule is meant to be used in a Merge Request to provide
@@ -144,6 +153,18 @@ catalog-diff:
 ```
 
 
+#### Variables
+
+The rule uses three variables:
+
+- `$DIFF_FLAGS`, the flags passed to catalog-diff
+- `$REPORT`, the name of the report written on disk
+- `$PUPPETDIFF_URL`, the URL posted at the end of the run, typically pointing
+  to the location of a [`puppet-catalog-diff-viewer`](https://github.com/camptocamp/puppet-catalog-diff-viewer) instance where the report can be inspected
+- `$CI_BOT_TOKEN`, the GitLab token used to post the diff URL to the Merge
+  Request as a comment
+
+
 ### Ghostbuster
 
 
@@ -159,3 +180,6 @@ ghostbuster:
   rules:
     - if: $GHOSTBUSTER == "true"
 ```
+
+Here, we're using the `$GHOSTBUSTER` variable to limit the scope of the run.
+This variable is then set to `"true"` in the cron job to launch this rule.
