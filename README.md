@@ -147,6 +147,9 @@ r10k-purge-mr:
 catalog-diff:
   extends: .catalog-diff
   stage: diff
+  environment:
+    name: 'diff/${CI_MERGE_REQUEST_IID}'
+    url: '${PUPPETDIFF_URL}/?report=${REPORT}'
   variables:
     DIFF_FLAGS: --show_resource_diff --exclude_classes --exclude_defined_resources --changed_depth 1000 --old_catalog_from_puppetdb --certless --threads 8 --ignore_parameters alias --exclude_resource_types Stage
     REPORT: mr_${CI_MERGE_REQUEST_IID}_${CI_JOB_ID}_minimal
@@ -156,6 +159,18 @@ catalog-diff:
     - if: '$CI_MERGE_REQUEST_TITLE =~ /\[autodiff\]/'
     - if: '$CI_MERGE_REQUEST_ID'
       when: manual
+
+catalog-diff-purge:
+  image: busybox
+  stage: purge
+  environment:
+    name: 'diff/${CI_MERGE_REQUEST_IID}'
+    action: stop
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - rm -rf /catalog-diff/mr_${CI_MERGE_REQUEST_IID}_*.json
+  allow_failure: true
 ```
 
 
