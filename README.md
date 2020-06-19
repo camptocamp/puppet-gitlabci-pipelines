@@ -92,6 +92,12 @@ r10k-purge:
 ```
 
 
+#### Requirements
+
+- A GitLab runner mounting (RW) the Puppet code inside `/etc/puppetlabs/puppet/code`
+  on its executors
+
+
 #### Variables
 
 The rules take two variables:
@@ -153,6 +159,16 @@ catalog-diff:
 ```
 
 
+#### Requirements
+
+- A GitLab runner mounting (RO) the Puppet code inside `/etc/puppetlabs/puppet/code`
+- The `camptocamp-catalog_diff` installed in the source branch (for example
+  using a `Puppetfile` with r10k)
+- If you want to store reports permanently, a GitLab runner mounting (RW)
+  a volume on the `/catalog-diff` directory (which can then be used with
+  puppet-catalog-diff-viewer for example)
+
+
 #### Variables
 
 The rule uses three variables:
@@ -181,5 +197,13 @@ ghostbuster:
     - if: $GHOSTBUSTER == "true"
 ```
 
-Here, we're using the `$GHOSTBUSTER` variable to limit the scope of the run.
+
+#### Requirements
+
+- A `Rakefile` in the current directory with a `ghostbuster` task.
+
+
+#### Variables
+
+In the example above, the `$GHOSTBUSTER` variable is used to limit the scope of the run.
 This variable is then set to `"true"` in the cron job to launch this rule.
