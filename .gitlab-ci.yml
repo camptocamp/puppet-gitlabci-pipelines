@@ -41,6 +41,7 @@
   script:
     - 'echo "${CI_COMMIT_REF_NAME}" | grep -q "-" && echo "Do not use - in branch names" && exit 1 || echo "Branch name ok"'
     - 'onceover run codequality  --no_docs'
+  interruptible: true
 
 .r10k-deploy:
   image: puppet/r10k:3.1.0
@@ -110,5 +111,6 @@
     - rake ghostbuster
   after_script:
     - *cleanup_cert
+  interruptible: true
   variables:
     HIERA_EYAML_PATH: ./hiera.yaml
