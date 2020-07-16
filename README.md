@@ -74,6 +74,7 @@ r10k-deploy:
     - if: '$CI_MERGE_REQUEST_ID'
       when: never
     - if: '$GHOSTBUSTER != "true"'
+  resource_group: 'r10k/${CI_COMMIT_REF_NAME}'
 
 r10k-purge:
   extends: .r10k-purge
@@ -130,6 +131,7 @@ r10k-deploy-mr:
     - if: '$CI_MERGE_REQUEST_TITLE =~ /\[autodiff.*\]/'
     - if: '$CI_MERGE_REQUEST_ID'
       when: manual
+  resource_group: 'r10k/mr_${CI_MERGE_REQUEST_IID}'
   allow_failure: true
 
 r10k-purge-mr:

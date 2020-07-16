@@ -45,9 +45,6 @@
 
 .r10k-deploy:
   image: puppet/r10k:3.1.0
-  before_script:
-    - while [ -f /etc/puppetlabs/code/r10k_${R10K_ENV}.lock ]; do echo -n "Waiting for lock from "; cat /etc/puppetlabs/code/r10k_${R10K_ENV}.lock || echo; sleep 2; done
-    - hostname -f > /etc/puppetlabs/code/r10k_${R10K_ENV}.lock
   script:
     - test -n "$R10K_BRANCH"
     - test -n "$R10K_ENV"
@@ -60,9 +57,9 @@
     - r10k deploy --color -c /tmp/r10k.yaml environment ${R10K_ENV} -p --verbose=debug
     - puppet generate types --environment ${R10K_ENV}
     - puppet module list --tree --environment ${R10K_ENV}
+  # This will work when https://gitlab.com/gitlab-org/gitlab-runner/-/issues/1809 is fixed
+  # In the meanwhile, override in your job
   resource_group: r10k/${R10K_ENV}
-  after_script:
-    - rm -f /etc/puppetlabs/code/r10k_${R10K_ENV}.lock
 
 .r10k-purge:
   image: busybox
