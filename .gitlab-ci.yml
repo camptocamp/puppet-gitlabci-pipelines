@@ -73,9 +73,6 @@
 
 .catalog-diff:
   image: puppet/puppet-agent:6.15.0
-  before_script:
-    - while [ -f /etc/puppetlabs/code/catalog-diff.lock ]; do echo -n "Waiting for lock from "; cat /etc/puppetlabs/code/catalog-diff.lock || echo; sleep 2; done
-    - hostname -f > /etc/puppetlabs/code/catalog-diff.lock
   script:
     - echo -e "section_start:`date +%s`:setup\r\e[0KCatalog-diff setup"
     - apt update
@@ -87,11 +84,12 @@
     - echo -e "section_end:`date +%s`:setup\r\e[0K"
     - puppet catalog --environment ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} --certificate_revocation=false diff puppetserver:8140/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} puppetserver:8140/mr_${CI_MERGE_REQUEST_IID} ${DIFF_FLAGS} --output_report /catalog-diff/${REPORT}.json
   after_script:
-    - rm -f /etc/puppetlabs/code/catalog-diff.lock
     - *cleanup_cert
     - echo "You can view the report details at ${PUPPETDIFF_URL}/?report=${REPORT}"
     - 'curl -k -X POST -H "Private-Token: $CI_BOT_TOKEN" -d "body=You can view the Catalog Diff report details at ${PUPPETDIFF_URL}/?report=${REPORT}" $CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes'
   allow_failure: true
+  resource_group: catalog-diff
+  interruptible: true
   variables:
     LANG: en_US.UTF-8
     LC_ALL: en_US.UTF-8
