@@ -60,6 +60,7 @@
     - r10k deploy --color -c /tmp/r10k.yaml environment ${R10K_ENV} -p --verbose=debug
     - puppet generate types --environment ${R10K_ENV}
     - puppet module list --tree --environment ${R10K_ENV}
+  resource_group: r10k/${R10K_ENV}
   after_script:
     - rm -f /etc/puppetlabs/code/r10k_${R10K_ENV}.lock
 
