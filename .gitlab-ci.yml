@@ -127,5 +127,6 @@
     - puppet ssl submit_request --ca_server puppetserver --certificate_revocation=false
     - gem install dropsonde
     - dropsonde preview ${DROPSONDE_OPTS}
+    - dropsonde submit ${DROPSONDE_OPTS}
   after_script:
     - *cleanup_cert
