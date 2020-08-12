@@ -56,7 +56,7 @@
     - test -d /etc/puppetlabs/code/environments/${R10K_ENV} || cp -a /etc/puppetlabs/code/environments/staging /etc/puppetlabs/code/environments/${R10K_ENV}
     - r10k deploy --color -c /tmp/r10k.yaml environment ${R10K_ENV} -p --verbose=debug
     - puppet generate types --environment ${R10K_ENV} --environmentpath /etc/puppetlabs/code/environments/
-    - puppet module list --tree --environment ${R10K_ENV}
+    - puppet module list --tree --environment ${R10K_ENV} --environmentpath /etc/puppetlabs/code/environments/
   # This will work when https://gitlab.com/gitlab-org/gitlab-runner/-/issues/1809 is fixed
   # In the meanwhile, override in your job
   resource_group: r10k/${R10K_ENV}
