@@ -74,7 +74,7 @@ variables:
   allow_failure: true
 
 .catalog-diff:
-  image: puppet/puppetserver:6.12.1
+  image: camptocamp/puppetserver:6.11.1_locales
   script:
     - echo -e "section_start:`date +%s`:setup\r\e[0KCatalog-diff setup"
     - mkdir -p /tmp/.puppetlabs/etc/puppet
