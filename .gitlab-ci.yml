@@ -77,6 +77,7 @@ variables:
   image: puppet/puppetserver:6.12.1
   script:
     - echo -e "section_start:`date +%s`:setup\r\e[0KCatalog-diff setup"
+    - mkdir -p /tmp/.puppetlabs/etc/puppet
     - *create_puppetdb_conf
     - *create_csr_attributes_yaml
     - puppet ssl submit_request --ca_server puppetserver --certificate_revocation=false
