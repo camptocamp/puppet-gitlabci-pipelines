@@ -90,6 +90,10 @@ variables:
   allow_failure: true
   resource_group: catalog-diff
   interruptible: true
+  variables:
+    LANG: en_US.UTF-8
+    LC_ALL: en_US.UTF-8
+
 
 .ghostbuster:
   image: puppet/puppet-agent:6.15.0
