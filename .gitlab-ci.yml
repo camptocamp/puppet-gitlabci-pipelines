@@ -74,7 +74,6 @@
   image: puppet/puppetserver:6.12.1
   script:
     - echo -e "section_start:`date +%s`:setup\r\e[0KCatalog-diff setup"
-    - locale-gen en_US.UTF-8
     - *create_puppetdb_conf
     - *create_csr_attributes_yaml
     - puppet ssl submit_request --ca_server puppetserver --certificate_revocation=false
@@ -87,9 +86,6 @@
   allow_failure: true
   resource_group: catalog-diff
   interruptible: true
-  variables:
-    LANG: en_US.UTF-8
-    LC_ALL: en_US.UTF-8
 
 .ghostbuster:
   image: puppet/puppet-agent:6.15.0
