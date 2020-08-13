@@ -1,4 +1,7 @@
 ---
+variables:
+  HOME: /tmp
+
 .create_r10k_yaml: &create_r10k_yaml |
   cat << EOF > /tmp/r10k.yaml
   ---
@@ -12,13 +15,13 @@
   EOF
 
 .create_puppetdb_conf: &create_puppetdb_conf |
-  cat << EOF > /etc/puppetlabs/puppet/puppetdb.conf
+  cat << EOF > /tmp/.puppetlabs/etc/puppet/puppetdb.conf
   [main]
   server_urls = https://puppetdb:8081
   EOF
 
 .create_csr_attributes_yaml: &create_csr_attributes_yaml |
-  cat << EOF > /etc/puppetlabs/puppet/csr_attributes.yaml
+  cat << EOF > /tmp/.puppetlabs/etc/puppet/csr_attributes.yaml
   ---
   custom_attributes:
     1.2.840.113549.1.9.7: 'hashed;$(echo -n "$psk/$(puppet config print certname)//staging" | openssl dgst -binary -sha256 | openssl base64)'
@@ -31,9 +34,9 @@
 .cleanup_cert: &cleanup_cert |
   curl -s -X  DELETE \
   "Accept:application/json" -H "Content-Type: text/pson" \
-  --cacert "/etc/puppetlabs/puppet/ssl/certs/ca.pem" \
-  --cert "/etc/puppetlabs/puppet/ssl/certs/$(puppet config print certname).pem" \
-  --key "/etc/puppetlabs/puppet/ssl/private_keys/$(puppet config print certname).pem" \
+  --cacert "/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem" \
+  --cert "/tmp/.puppetlabs/etc/puppet/ssl/certs/$(puppet config print certname).pem" \
+  --key "/tmp/.puppetlabs/etc/puppet/ssl/private_keys/$(puppet config print certname).pem" \
   "https://puppetserver:8140/puppet-ca/v1/certificate_status/$(puppet config print certname)?environment=production"
 
 .onceover:
@@ -71,17 +74,15 @@
   allow_failure: true
 
 .catalog-diff:
-  image: puppet/puppet-agent:6.15.0
+  image: camptocamp/puppetserver:6.11.1_locales
   script:
     - echo -e "section_start:`date +%s`:setup\r\e[0KCatalog-diff setup"
-    - apt update
-    - apt install -y locales puppetdb-termini
-    - locale-gen en_US.UTF-8
+    - mkdir -p /tmp/.puppetlabs/etc/puppet
     - *create_puppetdb_conf
     - *create_csr_attributes_yaml
     - puppet ssl submit_request --ca_server puppetserver --certificate_revocation=false
     - echo -e "section_end:`date +%s`:setup\r\e[0K"
-    - puppet catalog --environment ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} --certificate_revocation=false diff puppetserver:8140/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} puppetserver:8140/mr_${CI_MERGE_REQUEST_IID} ${DIFF_FLAGS} --output_report /catalog-diff/${REPORT}.json
+    - puppet catalog --environmentpath /etc/puppetlabs/code/environments --environment ${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME} --certificate_revocation=false diff puppetserver:8140/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} puppetserver:8140/mr_${CI_MERGE_REQUEST_IID} ${DIFF_FLAGS} --output_report /catalog-diff/${REPORT}.json
   after_script:
     - *cleanup_cert
     - echo "You can view the report details at ${PUPPETDIFF_URL}/?report=${REPORT}"
@@ -92,6 +93,7 @@
   variables:
     LANG: en_US.UTF-8
     LC_ALL: en_US.UTF-8
+
 
 .ghostbuster:
   image: puppet/puppet-agent:6.15.0
