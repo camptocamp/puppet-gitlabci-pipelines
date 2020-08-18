@@ -48,7 +48,7 @@ variables:
 
 .r10k-deploy:
   image: puppet/r10k:3.1.0
-  script:
+  before_script:
     - test -n "$R10K_BRANCH"
     - test -n "$R10K_ENV"
     - umask 0002
@@ -56,13 +56,21 @@ variables:
     - *create_r10k_yaml
     - git fetch --unshallow || echo
     - git fetch origin "${R10K_BRANCH}:${R10K_ENV}"
+  script:
     - test -d /etc/puppetlabs/code/environments/${R10K_ENV} || cp -a /etc/puppetlabs/code/environments/staging /etc/puppetlabs/code/environments/${R10K_ENV}
     - r10k deploy --color -c /tmp/r10k.yaml environment ${R10K_ENV} -p --verbose=debug
+  after_script:
     - puppet generate types --environment ${R10K_ENV} --environmentpath /etc/puppetlabs/code/environments/
     - puppet module list --tree --environment ${R10K_ENV} --environmentpath /etc/puppetlabs/code/environments/
   # This will work when https://gitlab.com/gitlab-org/gitlab-runner/-/issues/1809 is fixed
   # In the meanwhile, override in your job
   resource_group: r10k/${R10K_ENV}
+
+.g10k-deploy:
+  extends: .r10k-deploy
+  image: camptocamp/g10k:r10k
+  script:
+    - g10k -config /tmp/r10k.yaml -branch ${R10K_ENV} -verbose
 
 .r10k-purge:
   image: busybox
