@@ -93,6 +93,13 @@ r10k-purge:
 ```
 
 
+### G10K
+
+If you prefer to use G10K instead of R10K, extend the `.g10k-deploy` rule
+instead of `.r10k-deploy`.
+
+
+
 #### Requirements
 
 - A GitLab runner mounting (RW) the Puppet code inside `/etc/puppetlabs/puppet/code`
