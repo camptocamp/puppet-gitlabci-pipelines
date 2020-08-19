@@ -83,6 +83,12 @@ variables:
     - rm -rf /etc/puppetlabs/code/environments/${R10K_ENV}
   allow_failure: true
 
+.g10k-purge:
+  extends: .r10k-deploy
+  image: camptocamp/g10k:r10k
+  script:
+    - g10k -config /tmp/r10k.yaml -verbose
+
 .catalog-diff:
   image: camptocamp/puppetserver:6.11.1_locales
   script:
