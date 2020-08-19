@@ -7,7 +7,10 @@ variables:
   ---
   cachedir: /etc/puppetlabs/code/cache
   deploy:
-    purge_levels: ['puppetfile', 'environment']
+    purge_levels: ['deployment', 'puppetfile', 'environment']
+    # Requires https://github.com/xorpaul/g10k/pull/169 in g10k
+    purge_whitelist: ['.resource_types', '.resource_types/*.pp']
+    deployment_purge_whitelist: ['mr_*']
   sources:
     main:
       remote: $CI_PROJECT_DIR
@@ -80,6 +83,12 @@ variables:
     - test -n "$R10K_ENV"
     - rm -rf /etc/puppetlabs/code/environments/${R10K_ENV}
   allow_failure: true
+
+.g10k-purge:
+  extends: .r10k-deploy
+  image: camptocamp/g10k:r10k
+  script:
+    - g10k -config /tmp/r10k.yaml -verbose
 
 .catalog-diff:
   image: camptocamp/puppetserver:6.11.1_locales
