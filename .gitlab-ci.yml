@@ -8,6 +8,7 @@ variables:
   cachedir: /etc/puppetlabs/code/cache
   deploy:
     purge_levels: ['deployment', 'puppetfile', 'environment']
+    # Requires https://github.com/xorpaul/g10k/pull/169 in g10k
     purge_whitelist: ['.resource_types', '.resource_types/*.pp']
     deployment_purge_whitelist: ['mr_*']
   sources:
