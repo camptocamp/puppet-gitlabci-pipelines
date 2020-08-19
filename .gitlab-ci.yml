@@ -7,8 +7,9 @@ variables:
   ---
   cachedir: /etc/puppetlabs/code/cache
   deploy:
-    purge_levels: ['puppetfile', 'environment']
+    purge_levels: ['deployment', 'puppetfile', 'environment']
     purge_whitelist: ['.resource_types']
+    deployment_purge_whitelist: ['mr_*']
   sources:
     main:
       remote: $CI_PROJECT_DIR
