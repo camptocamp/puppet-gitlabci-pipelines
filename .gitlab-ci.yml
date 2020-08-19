@@ -8,7 +8,7 @@ variables:
   cachedir: /etc/puppetlabs/code/cache
   deploy:
     purge_levels: ['deployment', 'puppetfile', 'environment']
-    purge_whitelist: ['.resource_types']
+    purge_whitelist: ['.resource_types', '.resource_types/*.pp']
     deployment_purge_whitelist: ['mr_*']
   sources:
     main:
