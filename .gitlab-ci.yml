@@ -117,6 +117,8 @@ variables:
   export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${FQDN}.pem"
   export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${FQDN}.pem"
   export PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
+  ls -l /tmp/.puppetlabs/etc/puppet/ssl/private_keys/
+  ls -l /tmp/.puppetlabs/etc/puppet/ssl/certs/
   rake ghostbuster
 
 .ghostbuster:
