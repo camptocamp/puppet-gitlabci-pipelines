@@ -126,12 +126,12 @@ variables:
     - gem specific_install -l https://github.com/raphink/puppet-lint.git -b file
     - gem specific_install -l https://github.com/camptocamp/puppet-ghostbuster.git
     - rm -f .puppet-lint.rc
+    - export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/$(hostname -f).pem"
+    - export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/$(hostname -f).pem"
+    - export PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
     - rake ghostbuster
   after_script:
     - *cleanup_cert
   interruptible: true
   variables:
     HIERA_EYAML_PATH: ./hiera.yaml
-    PUPPETDB_KEY_FILE: "/tmp/.puppetlabs/etc/puppet/ssl/private_keys/$(hostname -f).pem"
-    PUPPETDB_CERT_FILE: "/tmp/.puppetlabs/etc/puppet/ssl/certs/$(hostname -f).pem"
-    PUPPETDB_CACERT_FILE: "/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
