@@ -112,11 +112,12 @@ variables:
     LC_ALL: en_US.UTF-8
 
 
-.export_ghostbuster_vars: &export_ghostbuster_vars |
+.exec_ghostbuster: &exec_ghostbuster |
   export FQDN=$(hostname -f)
   export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${FQDN}.pem"
   export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${FQDN}.pem"
   export PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
+  rake ghostbuster
 
 .ghostbuster:
   image: puppet/puppet-agent:6.15.0
@@ -132,8 +133,7 @@ variables:
     - gem specific_install -l https://github.com/raphink/puppet-lint.git -b file
     - gem specific_install -l https://github.com/camptocamp/puppet-ghostbuster.git
     - rm -f .puppet-lint.rc
-    - *export_ghostbuster_vars
-    - rake ghostbuster
+    - *exec_ghostbuster
   after_script:
     - *cleanup_cert
   interruptible: true
