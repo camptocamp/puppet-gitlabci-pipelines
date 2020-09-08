@@ -114,6 +114,8 @@ variables:
 
 .ghostbuster:
   image: puppet/puppet-agent:6.15.0
+  before_script:
+    - export FQDN=$(hostname -f)
   script:
     - apt update
     - apt install -y locales puppetdb-termini git
@@ -136,4 +138,3 @@ variables:
   interruptible: true
   variables:
     HIERA_EYAML_PATH: ./hiera.yaml
-    FQDN: '$(hostname -f)'
