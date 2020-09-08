@@ -132,3 +132,6 @@ variables:
   interruptible: true
   variables:
     HIERA_EYAML_PATH: ./hiera.yaml
+    PUPPETDB_KEY_FILE: "/tmp/.puppetlabs/etc/puppet/ssl/private_keys/$(hostname -f).pem"
+    PUPPETDB_CERT_FILE: "/tmp/.puppetlabs/etc/puppet/ssl/certs/$(hostname -f).pem"
+    PUPPETDB_CACERT_FILE: "/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
