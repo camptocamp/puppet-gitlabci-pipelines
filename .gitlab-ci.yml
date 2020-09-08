@@ -130,9 +130,9 @@ variables:
     - gem specific_install -l https://github.com/camptocamp/puppet-ghostbuster.git
     - rm -f .puppet-lint.rc
     - *export_fqdn
-    - export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${FQDN}.pem"
-    - export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${FQDN}.pem"
-    - export PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
+    - PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${FQDN}.pem"
+    - PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${FQDN}.pem"
+    - PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
     - rake ghostbuster
   after_script:
     - *cleanup_cert
