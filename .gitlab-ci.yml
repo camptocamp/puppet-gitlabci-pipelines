@@ -112,10 +112,11 @@ variables:
     LC_ALL: en_US.UTF-8
 
 
+.export_fqdn: &export_fqdn |
+  export FQDN=$(hostname -f)
+
 .ghostbuster:
   image: puppet/puppet-agent:6.15.0
-  before_script:
-    - export FQDN=$(hostname -f)
   script:
     - apt update
     - apt install -y locales puppetdb-termini git
@@ -128,7 +129,7 @@ variables:
     - gem specific_install -l https://github.com/raphink/puppet-lint.git -b file
     - gem specific_install -l https://github.com/camptocamp/puppet-ghostbuster.git
     - rm -f .puppet-lint.rc
-    - echo 'FQDN: ${FQDN}'
+    - *export_fqdn
     - export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${FQDN}.pem"
     - export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${FQDN}.pem"
     - export PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
