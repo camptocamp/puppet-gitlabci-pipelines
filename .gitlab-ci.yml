@@ -122,11 +122,9 @@ variables:
   rake ghostbuster
 
 .ghostbuster:
-  image: puppet/puppet-agent:6.15.0
+  image: camptocamp/puppetserver:6.11.1_locales
   script:
-    - apt update
-    - apt install -y locales puppetdb-termini git
-    - locale-gen en_US.UTF-8
+    - echo -e "section_start:`date +%s`:setup\r\e[0KSetup"
     - mkdir -p /tmp/.puppetlabs/etc/puppet
     - *create_puppetdb_conf
     - *create_csr_attributes_yaml
@@ -135,6 +133,7 @@ variables:
     - gem specific_install -l https://github.com/raphink/puppet-lint.git -b file
     - gem specific_install -l https://github.com/camptocamp/puppet-ghostbuster.git
     - rm -f .puppet-lint.rc
+    - echo -e "section_end:`date +%s`:setup\r\e[0K"
     - *exec_ghostbuster
   after_script:
     - *cleanup_cert
