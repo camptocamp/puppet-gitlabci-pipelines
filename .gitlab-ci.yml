@@ -113,10 +113,9 @@ variables:
 
 
 .exec_ghostbuster: &exec_ghostbuster |
-  export FQDN=$(hostname -f)
-  echo "FQDN=${FQDN}"
-  export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${FQDN}.pem"
-  export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${FQDN}.pem"
+  export CERTNAME=$(puppet config print certname)
+  export PUPPETDB_KEY_FILE="/tmp/.puppetlabs/etc/puppet/ssl/private_keys/${CERTNAME}.pem"
+  export PUPPETDB_CERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/${CERTNAME}.pem"
   export PUPPETDB_CACERT_FILE="/tmp/.puppetlabs/etc/puppet/ssl/certs/ca.pem"
   ls -l /tmp/.puppetlabs/etc/puppet/ssl/private_keys/
   ls -l /tmp/.puppetlabs/etc/puppet/ssl/certs/
