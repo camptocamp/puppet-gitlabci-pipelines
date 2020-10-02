@@ -141,3 +141,5 @@ variables:
   interruptible: true
   variables:
     HIERA_EYAML_PATH: ./hiera.yaml
+    LANG: en_US.UTF-8
+    LC_ALL: en_US.UTF-8
