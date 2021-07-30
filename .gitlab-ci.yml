@@ -71,7 +71,7 @@ variables:
 
 .g10k-deploy:
   extends: .r10k-deploy
-  image: camptocamp/g10k:0.8.12
+  image: camptocamp/g10k:0.8.15
   script:
     - g10k -config /tmp/r10k.yaml -branch ${R10K_ENV} -verbose
 
@@ -86,7 +86,7 @@ variables:
 
 .g10k-purge:
   extends: .r10k-deploy
-  image: camptocamp/g10k:r10k
+  image: camptocamp/g10k:0.8.15
   script:
     - g10k -config /tmp/r10k.yaml -verbose
 
